@@ -1,0 +1,21 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  annotations:
+    kompose.version: 1.2.0
+  labels:
+    io.kompose.service: redis
+  name: redis
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        io.kompose.service: redis
+    spec:
+      containers:
+      - image: redis:3.0-alpine
+        name: redis
+        ports:
+        - containerPort: 6379
+      restartPolicy: Always

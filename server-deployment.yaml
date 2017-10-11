@@ -1,0 +1,47 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  annotations:
+    kompose.version: 1.2.0
+  labels:
+    io.kompose.service: server
+  name: server
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        io.kompose.service: server
+    spec:
+      containers:
+      - command:
+        - /bin/sh
+        - -c
+        - /app/bin/docker-entrypoint create_db; /app/bin/docker-entrypoint server
+        env:
+        - name: PYTHONUNBUFFERED
+          value: "0"
+        - name: REDASH_COOKIE_SECRET
+          value: veryverysecret
+        - name: REDASH_DATABASE_URL
+          value: postgresql://postgres@postgres:5432/postgres
+        - name: REDASH_LOG_LEVEL
+          value: INFO
+        - name: REDASH_REDIS_URL
+          value: redis://redis:6379/0
+        - name: REDASH_WEB_WORKERS
+          value: "4"
+        - name: REDASH_MAIL_SERVER
+          # Update the correct SMTP server name or IP
+          value: "<hostname>"
+        - name: REDASH_MAIL_DEFAULT_SENDER
+          value: "redash@example.com"
+        - name: REDASH_HOST
+          # Update the correct redash host URL
+          value: "http://redash..example.com"
+        image: redash/redash:latest
+        name: server
+        ports:
+        - containerPort: 5000
+
+

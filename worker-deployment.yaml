@@ -1,0 +1,41 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  annotations:
+    kompose.version: 1.2.0
+  labels:
+    io.kompose.service: worker
+  name: worker
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        io.kompose.service: worker
+    spec:
+      containers:
+      - args:
+        - scheduler
+        env:
+        - name: PYTHONUNBUFFERED
+          value: "0"
+        - name: QUEUES
+          value: queries,scheduled_queries,celery
+        - name: REDASH_DATABASE_URL
+          value: postgresql://postgres@postgres:5432/postgres
+        - name: REDASH_LOG_LEVEL
+          value: INFO
+        - name: REDASH_REDIS_URL
+          value: redis://redis:6379/0
+        - name: WORKERS_COUNT
+          value: "2"
+        - name: REDASH_MAIL_SERVER
+          # Update the correct SMTP server name or IP
+          value: "<hostname>"
+        - name: REDASH_MAIL_DEFAULT_SENDER
+          value: "redash@example.com"
+        - name: REDASH_HOST
+          # Update the correct redash host URL
+          value: "http://redash..example.com"
+        image: redash/redash:latest
+        name: worker
