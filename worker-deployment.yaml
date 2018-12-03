@@ -7,12 +7,29 @@ metadata:
     io.kompose.service: worker
   name: worker
 spec:
-  replicas: 1
+  replicas: 2
   template:
     metadata:
       labels:
         io.kompose.service: worker
     spec:
+      affinity:
+        nodeAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+            - matchExpressions:
+              - key: type
+                operator: In
+                values:
+                - worker
+          preferredDuringSchedulingIgnoredDuringExecution:
+          - weight: 1
+            preference:
+              matchExpressions:
+              - key: type
+                operator: In
+                values:
+                - worker
       containers:
       - args:
         - scheduler

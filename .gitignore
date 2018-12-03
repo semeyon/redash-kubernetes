@@ -49,3 +49,4 @@ coverage.xml
 .env
 .npmrc
 .google.auth.json
+certificates
